@@ -1,0 +1,96 @@
+
+GRANT ALL ON tvs.* TO 'admin'@'localhost' IDENTIFIED BY 'notsecure1234';
+GRANT ALL ON tvs.* TO 'sania'@'127.0.0.1' IDENTIFIED BY 'notsecure1234';
+
+CREATE TABLE Users (
+  user_id INTEGER NOT NULL AUTO_INCREMENT,
+  name VARCHAR(128),
+  surname VARCHAR(128),
+  email VARCHAR(128),
+  password VARCHAR(128),
+  PRIMARY KEY(user_id)
+) ENGINE = InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE Users ADD INDEX(email);
+ALTER TABLE Users ADD INDEX(password);
+
+INSERT INTO users (name,surname,email,password) VALUES ('admin','admin','admin@admin.vilniustech.lt','0126ba4ec93ec6a80dbc401b8b1456da');
+
+CREATE TABLE Gearbox (
+  gearbox_id INTEGER NOT NULL AUTO_INCREMENT,
+  type VARCHAR(255),
+  PRIMARY KEY(gearbox_id),
+  UNIQUE(type)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO Gearbox (type) VALUES ('Automatinė');
+INSERT INTO Gearbox (type) VALUES ('Mechaninė');
+
+CREATE TABLE Fuel (
+  fuel_id INTEGER NOT NULL AUTO_INCREMENT,
+  type VARCHAR(255),
+  PRIMARY KEY(fuel_id),
+  UNIQUE(type)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO Fuel (type) VALUES ('Dyzelis');
+INSERT INTO Fuel (type) VALUES ('Benzinas');
+INSERT INTO Fuel (type) VALUES ('Benzinas/Dujos');
+INSERT INTO Fuel (type) VALUES ('Elektra');
+
+CREATE TABLE Body (
+  body_id INTEGER NOT NULL AUTO_INCREMENT,
+  type VARCHAR(255),
+  PRIMARY KEY(body_id),
+  UNIQUE(type)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO Body (type) VALUES ('Sedanas');
+INSERT INTO Body (type) VALUES ('Hečbekas');
+INSERT INTO Body (type) VALUES ('Universalas');
+INSERT INTO Body (type) VALUES ('Visureigis');
+INSERT INTO Body (type) VALUES ('Vienatūris');
+INSERT INTO Body (type) VALUES ('Kupė');
+INSERT INTO Body (type) VALUES ('Kabrioletas');
+INSERT INTO Body (type) VALUES ('Limuzinas');
+INSERT INTO Body (type) VALUES ('Pikapas');
+
+CREATE TABLE autos (
+  auto_id INTEGER NOT NULL AUTO_INCREMENT,
+  user_id INTEGER NOT NULL,
+  brand TEXT,
+  model TEXT,
+  year INTEGER,
+  body_id INTEGER,
+  fuel_id INTEGER,
+  gearbox_id INTEGER,
+
+  CONSTRAINT auto_ibfk_1
+     FOREIGN KEY (user_id)
+     REFERENCES users (user_id)
+     ON DELETE CASCADE ON UPDATE CASCADE,
+
+  CONSTRAINT auto_ibfk_2
+     FOREIGN KEY (body_id)
+     REFERENCES Body (body_id)
+     ON DELETE CASCADE ON UPDATE CASCADE,
+
+  CONSTRAINT auto_ibfk_3
+     FOREIGN KEY (fuel_id)
+     REFERENCES Fuel (fuel_id)
+     ON DELETE CASCADE ON UPDATE CASCADE,
+
+  CONSTRAINT auto_ibfk_4
+     FOREIGN KEY (gearbox_id)
+     REFERENCES Gearbox (gearbox_id)
+     ON DELETE CASCADE ON UPDATE CASCADE,
+
+  PRIMARY KEY(auto_id, user_id, body_id, fuel_id, gearbox_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE supportticket (
+  ticked_id INTEGER NOT NULL AUTO_INCREMENT,
+  email VARCHAR(128),
+  problem_desc TEXT,
+  PRIMARY KEY(ticked_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
